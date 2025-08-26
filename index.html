@@ -3,30 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YouTube Subscribers Counter</title>
+  <title>YouTube • Subscribers</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <div class="glow-container">
-      <div class="counter" id="counter">—</div>
-      <div class="label">SUBS</div>
+    <div class="card">
+      <div class="header">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="#FF0000">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M10 8l6 4-6 4z" fill="white" />
+        </svg>
+        <h1>YouTube Subscribers</h1>
+      </div>
+
+      <div class="main-counter" id="counter">—</div>
+      <div class="info">+<span id="daily">—</span> за сутки</div>
+
+      <div class="progress">
+        <div class="labels">
+          <span>100K</span>
+          <span>150K</span>
+        </div>
+        <div class="bar"><div class="fill" id="fillBar"></div></div>
+      </div>
+
+      <a href="https://youtube.com/channel/UClEedBFYiO1UP7GX9FM60zg" target="_blank" class="btn">
+        Подписаться на канал
+      </a>
     </div>
-    <div class="info">
-      ↑ <span id="change">—</span> за 24 часа
-    </div>
-    <div class="progress">
-      <div>Цель: 150,000</div>
-      <div class="bar"><div class="fill" id="progressBar"></div></div>
-      <div class="percent" id="percent">0%</div>
-    </div>
-    <a href="https://youtube.com/@ваш_канал" target="_blank" class="btn">
-      Подписаться
-    </a>
-    <div class="footer">
-      Обновлено: <span id="updated">—</span> | Обновляется каждые 5 мин
-    </div>
+
+    <p class="footer">
+      Обновлено: <span id="updateTime">—</span>
+    </p>
   </div>
 
   <script src="script.js"></script>
