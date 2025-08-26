@@ -1,49 +1,44 @@
-const counter = document.getElementById('counter');
-const changeEl = document.getElementById('change');
-const progressBar = document.getElementById('progressBar');
-const percent = document.getElementById('percent');
-const updated = document.getElementById('updated');
+// Флаг: использовать JSON или хардкод
+const USE_JSON = true;
 
-const TARGET = 150000; // Цель
-let lastCount = 0;
+// Хардкод (временно)
+const MOCK_DATA = {
+  subs: 124832,
+  daily: 248,
+  updated: "15 мая 2025, 14:30"
+};
 
-async function updateCounter() {
-  try {
-    const res = await fetch('/api/fetch-subs');
-    const data = await res.json();
+// Цель для прогресс-бара
+const TARGET = 150000;
 
-    if (data.subs !== undefined) {
-      const now = new Date();
-      const prev = localStorage.getItem('lastCount');
-      const prevTime = localStorage.getItem('lastTime');
+async function loadStats() {
+  let data = MOCK_DATA;
 
-      const change = prev ? data.subs - parseInt(prev) : 0;
-
-      counter.textContent = formatNumber(data.subs);
-      changeEl.textContent = change > 0 ? `+${change}` : change;
-      updated.textContent = now.toLocaleTimeString('ru-RU');
-
-      // Прогресс
-      const progress = Math.min((data.subs / TARGET) * 100, 100);
-      progressBar.style.width = `${progress}%`;
-      percent.textContent = `${progress.toFixed(1)}%`;
-
-      // Сохраняем
-      localStorage.setItem('lastCount', data.subs);
-      localStorage.setItem('lastTime', now.toISOString());
+  if (USE_JSON) {
+    try {
+      const res = await fetch('data.json?t=' + new Date().getTime());
+      data = await res.json();
+    } catch (e) {
+      console.warn("Не удалось загрузить data.json, используем заглушку");
     }
-  } catch (err) {
-    console.error("Ошибка:", err);
-    changeEl.textContent = "ошибка";
   }
+
+  // Обновляем DOM
+  document.getElementById('counter').textContent = 
+    new Intl.NumberFormat('ru-RU').format(data.subs);
+
+  document.getElementById('daily').textContent = 
+    new Intl.NumberFormat('ru-RU').format(data.daily);
+
+  document.getElementById('updateTime').textContent = data.updated;
+
+  // Прогресс-бар
+  const progress = Math.min((data.subs / TARGET) * 100, 100);
+  document.getElementById('fillBar').style.width = `${progress}%`;
 }
 
-function formatNumber(num) {
-  return new Intl.NumberFormat('ru-RU').format(num);
-}
-
-// Обновляем при загрузке
-updateCounter();
+// Загружаем при старте
+document.addEventListener("DOMContentLoaded", loadStats);
 
 // Обновляем каждые 5 минут
-setInterval(updateCounter, 5 * 60 * 1000);
+setInterval(loadStats, 5 * 60 * 1000);
